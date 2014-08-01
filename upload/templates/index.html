@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<head>
+    <title>Upload Form</title>
+
+    <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="/media/css/style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.21/angular.min.js" type="text/javascript"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.21/angular-resource.min.js" type="text/javascript"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="/media/js/uploadapp.js" type="text/javascript"></script>
+    <script src="/media/js/uploadcontroller.js" type="text/javascript"></script>
+
+</head>
+<body>
+{% verbatim %}
+    <div id="content" ng-app="UploadApp" >
+    	<div id="upload" ng-controller="UploadController" >
+	       <h1>Needle Test App</h1>
+	       <h3>AngularJS with a Django Rest Backend</h3>
+	        <div novalidate class="well pull-left col-md-5">
+			    <h3>Create a New Lead</h3>
+			    <form name="lead">
+			    	<p ng-show="errors.email"><ul ng-repeat="error in errors.name" class="bg-danger error-ul"><li>{{error}}</li></ul></p>
+			    	 <p ng-show="errors.email"><ul ng-repeat="error in errors.email" class="bg-danger error-ul"><li>{{error}}</li></ul></p>
+			      <input id="name" class="form-control" type="text" name="name" ng-model="leadUpload.name" placeholder="Name" required />
+                  <br />
+			      <input id="email" class="form-control" type="email" name="email" ng-model="leadUpload.email" placeholder="Email" required />
+			      <br />
+			      <button type="submit" class="btn btn-primary"
+			         ng-click="submitData(leadUpload)"
+			         ng-disabled="lead.$invalid">Add Lead</button>
+			    </form>
+	        </div>
+	        <div class="well pull-right col-md-6">
+		        <div ng-repeat="lead in leads">
+		            <div class="entry">
+		               <h3>{{lead.name}}</h3>
+		               <p><b>Email:</b> {{lead.email}}<br/>
+		               	  <b>Date Created:</b> {{lead.date_created|date : 'medium'}}</p>
+		            </div>
+	           </div>
+	        </div>
+        </div>
+    </div>
+{% endverbatim %}
+
+<script>
+// Add the CSRF Token
+var app = angular.module('UploadApp'); // Not including a list of dependent modules (2nd parameter to `module`) "re-opens" the module for additional configuration
+app.config(['$httpProvider', function($httpProvider) {
+    $httpProvider.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token|escapejs }}';
+}]);
+</script>
+
+</body>
+</html>
